@@ -1,7 +1,6 @@
 # TP Récapitulatif - API de Gestion de Cours en Ligne
 
-**Objectif :** Créer une API REST complète pour gérer une plateforme de cours en ligne
----
+## **Objectif :** Créer une API REST complète pour gérer une plateforme de cours en ligne
 
 Vous devez développer une API pour une plateforme de cours en ligne. Cette API permettra de gérer des cours, des catégories et des utilisateurs avec différents niveaux d'accès.
 
@@ -12,6 +11,7 @@ Vous devez développer une API pour une plateforme de cours en ligne. Cette API 
 ### Entités
 
 #### 1. **Cours** (Course)
+
 - `id` : Integer (auto-incrémenté)
 - `title` : String (requis)
 - `description` : Text (requis)
@@ -25,6 +25,7 @@ Vous devez développer une API pour une plateforme de cours en ligne. Cette API 
 - `updatedAt` : Date
 
 #### 2. **Catégorie** (Category)
+
 - `id` : Integer (auto-incrémenté)
 - `name` : String (requis, unique)
 - `description` : Text
@@ -34,6 +35,7 @@ Vous devez développer une API pour une plateforme de cours en ligne. Cette API 
 **Relation :** Une catégorie peut avoir plusieurs cours. Un cours appartient à une seule catégorie.
 
 #### 3. **Utilisateur** (User)
+
 - `id` : Integer (auto-incrémenté)
 - `username` : String (requis, unique)
 - `email` : String (requis, unique)
@@ -47,35 +49,47 @@ Vous devez développer une API pour une plateforme de cours en ligne. Cette API 
 ## Routes à implémenter
 
 ### Authentification
+
 - `POST /auth/register` - Inscription d'un utilisateur
 - `POST /auth/login` - Connexion et génération du token JWT
 
 ### Cours
+
 - `GET /courses` - Récupérer tous les cours publiés (public)
 - `GET /courses/:id` - Récupérer un cours par son ID (public)
 - `GET /courses/level/:level` - Récupérer les cours par niveau (public)
+- `GET /courses/search?keyword=...` - Rechercher des cours par mot-clé (titre ou description) (public)
+- `GET /courses/filter?minPrice=...&maxPrice=...` - Filtrer par prix (public)
 - `POST /courses` - Créer un cours (protégé - instructor ou admin)
 - `PUT /courses/:id` - Modifier un cours (protégé - instructor ou admin)
 - `DELETE /courses/:id` - Supprimer un cours (protégé - admin uniquement)
 
 ### Catégories
+
 - `GET /categories` - Récupérer toutes les catégories (public)
 - `GET /categories/:id` - Récupérer une catégorie avec ses cours (public)
 - `POST /categories` - Créer une catégorie (protégé - admin uniquement)
+
+### Statistiques
+
+- `GET /stats/courses` - Nombre total de cours par catégorie (protégé - admin uniquement)
+- `GET /stats/users` - Nombre d'utilisateurs par rôle (protégé - admin uniquement)
 
 ---
 
 ## Système d'authentification
 
-Attention : les rôles sont en BONUS. 
+Attention : les rôles sont en BONUS.
 Au minimum, mettre en place l'authentification avec JWT (protégé ou public comme vu dans les exercices)
 En bonus, mettre en place 2 rôles et nuancer les accès (voir la partie juste au-dessus avec les routes et les accès)
 
 ### Rôles
+
 - **instructor** : Peut créer et modifier des cours
 - **admin** : Accès complet (création, modification, suppression)
 
 ### JWT
+
 - Utiliser `jsonwebtoken` pour générer les tokens
 - Le token doit contenir : `id`, `username`, `role`
 - Durée de validité : 24h
@@ -87,6 +101,7 @@ En bonus, mettre en place 2 rôles et nuancer les accès (voir la partie juste a
 Utiliser `express-validator` pour valider :
 
 ### Cours
+
 - `title` : non vide, min 3 caractères
 - `description` : non vide, min 10 caractères
 - `duration` : nombre positif
@@ -96,10 +111,12 @@ Utiliser `express-validator` pour valider :
 - `categoryId` : doit exister dans la base
 
 ### Catégorie
+
 - `name` : non vide, min 3 caractères, unique
 - `description` : optionnel
 
 ### User
+
 - `username` : non vide, min 3 caractères, unique
 - `email` : format email valide, unique
 - `password` : min 6 caractères
@@ -110,6 +127,7 @@ Utiliser `express-validator` pour valider :
 ## Documentation Swagger
 
 Documenter au minimum :
+
 - `GET /courses` - Liste des cours
 - `POST /courses` - Création d'un cours
 - `POST /auth/register` - Inscription
@@ -122,6 +140,7 @@ La documentation doit être accessible sur `/api-docs`
 ## Tests unitaires
 
 Créer des tests Jest pour :
+
 - `courseService.js` : au minimum `getAllCourses()`, `getCourseById()`, `createCourse()` ou les noms de fonctions correspondants
 - `categoryService.js` : au minimum `getAllCategories()`, `createCategory()` ou les noms de fonctions correspondants
 
@@ -130,10 +149,12 @@ Créer des tests Jest pour :
 ## BONUS (optionnel)
 
 ### Bonus 2 : Recherche avancée
+
 - `GET /courses/search?keyword=...` - Rechercher des cours par mot-clé (titre ou description)
 - `GET /courses/filter?minPrice=...&maxPrice=...` - Filtrer par prix
 
 ### Bonus 3 : Statistiques
+
 - `GET /stats/courses` - Nombre total de cours par catégorie (admin)
 - `GET /stats/users` - Nombre d'utilisateurs par rôle (admin)
 

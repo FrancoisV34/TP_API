@@ -2,6 +2,8 @@ const {
   getAllCourses,
   getCourseById,
   getCoursesByLevel,
+  searchCourses,
+  filterCoursesByPrice,
   createCourse,
   updateCourse,
   deleteCourse,
@@ -43,6 +45,29 @@ const getCoursesByLevelHandler = async (req, res) => {
 
   try {
     const courses = await getCoursesByLevel(req.params.level);
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const searchCoursesHandler = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    if (!keyword) {
+      return res.status(400).json({ error: 'Keyword parameter is required' });
+    }
+    const courses = await searchCourses(keyword);
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const filterCoursesByPriceHandler = async (req, res) => {
+  try {
+    const { minPrice, maxPrice } = req.query;
+    const courses = await filterCoursesByPrice(minPrice, maxPrice);
     res.json(courses);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -107,6 +132,8 @@ module.exports = {
   getCourses,
   getCourse,
   getCoursesByLevelHandler,
+  searchCoursesHandler,
+  filterCoursesByPriceHandler,
   createCourseHandler,
   updateCourseHandler,
   deleteCourseHandler,

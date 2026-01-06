@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Course = require('../model/Course');
 const Category = require('../model/Category');
 
@@ -80,6 +81,47 @@ const updateCourse = async (id, data) => {
   }
 };
 
+//recherche des cours par mot-clé dans titre ou description
+const searchCourses = async (keyword) => {
+  return await Course.findAll({
+    where: {
+      published: true,
+      [Op.or]: [
+        { title: { [Op.like]: `%${keyword}%` } },
+        { description: { [Op.like]: `%${keyword}%` } },
+      ],
+    },
+    include: {
+      model: Category,
+      as: 'category',
+    },
+  });
+};
+
+//filtre les cours par prix
+const filterCoursesByPrice = async (minPrice, maxPrice) => {
+  const whereClause = { published: true };
+  if (minPrice !== undefined && minPrice !== '') {
+    whereClause.price = {
+      ...whereClause.price,
+      [Op.gte]: parseFloat(minPrice),
+    };
+  }
+  if (maxPrice !== undefined && maxPrice !== '') {
+    whereClause.price = {
+      ...whereClause.price,
+      [Op.lte]: parseFloat(maxPrice),
+    };
+  }
+  return await Course.findAll({
+    where: whereClause,
+    include: {
+      model: Category,
+      as: 'category',
+    },
+  });
+};
+
 const deleteCourse = async (id) => {
   try {
     const course = await Course.findByPk(id);
@@ -97,6 +139,8 @@ module.exports = {
   getAllCourses,
   getCourseById,
   getCoursesByLevel,
+  searchCourses,
+  filterCoursesByPrice,
   createCourse,
   updateCourse,
   deleteCourse,

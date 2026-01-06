@@ -54,6 +54,8 @@ const {
   getCourses,
   getCourse,
   getCoursesByLevelHandler,
+  searchCoursesHandler,
+  filterCoursesByPriceHandler,
   createCourseHandler,
   updateCourseHandler,
   deleteCourseHandler,
@@ -140,6 +142,60 @@ router.get(
   getCoursesByLevelValidation,
   getCoursesByLevelHandler
 );
+
+/**
+ * @swagger
+ * /courses/search:
+ *   get:
+ *     summary: Rechercher des cours par mot-clé
+ *     tags: [Courses]
+ *     parameters:
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Mot-clé pour rechercher dans titre et description
+ *     responses:
+ *       200:
+ *         description: Liste des cours correspondants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Course'
+ */
+router.get('/search', searchCoursesHandler);
+
+/**
+ * @swagger
+ * /courses/filter:
+ *   get:
+ *     summary: Filtrer les cours par prix
+ *     tags: [Courses]
+ *     parameters:
+ *       - in: query
+ *         name: minPrice
+ *         schema:
+ *           type: number
+ *         description: Prix minimum
+ *       - in: query
+ *         name: maxPrice
+ *         schema:
+ *           type: number
+ *         description: Prix maximum
+ *     responses:
+ *       200:
+ *         description: Liste des cours filtrés prix mini/maxi
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Course'
+ */
+router.get('/filter', filterCoursesByPriceHandler);
 
 //⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ Chose que je ne savais pas ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 // Middleware d'authentification appliqué à partir d'ici
