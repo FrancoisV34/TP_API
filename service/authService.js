@@ -53,14 +53,14 @@ async function register({ email, username, password, role }) {
 async function login({ email, password }) {
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    const err = new Error("Invalid credentials");
+    const err = new Error("Combinaison email et mot de passe invalide !");
     err.status = 401;
     throw err;
   }
 
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
-    const err = new Error("Invalid credentials");
+    const err = new Error("Combinaison email et mot de passe invalide !");
     err.status = 401;
     throw err;
   }
