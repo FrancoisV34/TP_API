@@ -39,7 +39,7 @@ async function register({ email, username, password, role }) {
     email,
     username,
     passwordHash,
-    role: USER_ROLES.USER,
+    role: role || USER_ROLES.USER,
   });
 
   return { 
