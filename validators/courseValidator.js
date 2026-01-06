@@ -44,7 +44,43 @@ const updateCourseValidation = [
     .notEmpty()
     .isInt()
     .withMessage("l'identifiant du cours doit être un entier"),
-  ...createCourseValidation,
+  body('title')
+    .optional()
+    .isLength({ min: 3, max: 255 })
+    .withMessage('Le titre doit contenir entre 3 et 255 caractères'),
+  body('description')
+    .optional()
+    .isLength({ min: 10 })
+    .withMessage('La description doit contenir au moins 10 caractères'),
+  body('duration')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('La durée doit être un entier positif (en minutes)'),
+  body('level')
+    .optional()
+    .isIn([
+      'débutant',
+      'intermédiaire',
+      'avancé',
+      'Débutant',
+      'Intermédiaire',
+      'Avancé',
+    ])
+    .withMessage(
+      'Le niveau de difficulté doit être débutant, intermédiaire, ou avancé'
+    ),
+  body('price')
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage('Le prix doit être un nombre positif (supérieur ou égal à 0)'),
+  body('instructor')
+    .optional()
+    .isLength({ min: 1 })
+    .withMessage('Le nom du professeur est obligatoire'),
+  body('categoryId')
+    .optional()
+    .isInt()
+    .withMessage("L'identifiant de la catégorie doit être un entier"),
 ];
 
 const getCourseByIdValidation = [

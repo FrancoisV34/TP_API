@@ -67,15 +67,40 @@ const createCourse = async (data) => {
   }
 };
 
-//met à jour un cours existant
+//met à jour un cours existant (mise à jour partielle)
 const updateCourse = async (id, data) => {
   try {
-    const course = await Course.findOne({ where: { id, published: true } });
+    const course = await Course.findOne({
+      where: { id, published: true },
+      include: {
+        model: Category,
+        as: 'category',
+      },
+    });
     if (!course) {
       throw new Error(`Course with id ${id} not found`);
     }
+
+    // Vérifier que la catégorie existe si categoryId est fourni
+    if (data.categoryId !== undefined) {
+      const category = await Category.findByPk(data.categoryId);
+      if (!category) {
+        throw new Error('Category not found');
+      }
+    }
+
+    // Mise à jour partielle - seuls les champs fournis sont modifiés
     await course.update(data);
-    return course;
+
+    // Recharger le cours avec les associations pour retourner les données complètes
+    const updatedCourse = await Course.findByPk(id, {
+      include: {
+        model: Category,
+        as: 'category',
+      },
+    });
+
+    return updatedCourse;
   } catch (error) {
     throw new Error(`Failed to update course: ${error.message}`);
   }
