@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/database');
+const associations = require('./config/associations');
 const { swaggerUi, specs } = require('./config/swagger');
 const courseRouter = require('./router/courseRouter');
 const categoryRouter = require('./router/categoryRouter');
@@ -28,10 +29,10 @@ app.use((err, req, res, next) => {
   console.error(err);
 
   // Affiche l'erreur que sur la page de Login et Register
-  if("/auth/login" === req.path || "/auth/register" === req.path) {
+  if ('/auth/login' === req.path || '/auth/register' === req.path) {
     res.status(err.status).send(err.message);
   } else {
-    res.status(err.status).send("Something broke !");
+    res.status(err.status).send('Something broke !');
   }
 });
 
