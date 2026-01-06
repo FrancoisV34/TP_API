@@ -93,7 +93,18 @@ const getCourseByIdValidation = [
 const getCoursesByLevelValidation = [
   param('level')
     .notEmpty()
-    .isIn(['débutant', 'intermédiaire', 'avancé'])
+    .toLowerCase()
+    .isIn([
+      'débutant',
+      'intermédiaire',
+      'avancé',
+      'Débutant',
+      'Intermédiaire',
+      'Avancé',
+      'DEBUTANT',
+      'INTERMEDIAIRE',
+      'AVANCE',
+    ])
     .withMessage(
       'Le niveau de difficulté doit être débutant, intermédiaire, ou avancé'
     ),

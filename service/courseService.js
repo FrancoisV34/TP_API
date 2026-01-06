@@ -34,7 +34,10 @@ const getCourseById = async (id) => {
 //retrouve tous les cours d'un certain niveau (débutant, intermédiaire, avancé) et publiés
 const getCoursesByLevel = async (level) => {
   return await Course.findAll({
-    where: { level, published: true },
+    where: {
+      level,
+      published: true,
+    },
     include: {
       model: Category,
       as: 'category',
