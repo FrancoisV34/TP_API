@@ -16,7 +16,7 @@ const Category = sequelize.define(
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

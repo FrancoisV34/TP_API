@@ -6,6 +6,7 @@
  *       type: object
  *       required:
  *         - name
+ *         - description
  *       properties:
  *         id:
  *           type: integer

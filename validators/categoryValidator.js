@@ -7,7 +7,8 @@ const createCategoryValidation = [
     .isLength({ min: 3, max: 255 })
     .withMessage('Le nom doit contenir au moins 3 caractères'),
   body('description')
-    .optional()
+    .notEmpty()
+    .withMessage('La description de la catégorie est obligatoire')
     .isLength({ max: 500 })
     .withMessage('La description ne peut pas dépasser 500 caractères'),
 ];

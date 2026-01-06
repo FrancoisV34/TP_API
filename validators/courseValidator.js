@@ -16,7 +16,14 @@ const createCourseValidation = [
     .isInt({ min: 1 })
     .withMessage('La durée doit être un entier positif (en minutes)'),
   body('level')
-    .isIn(['débutant', 'intermédiaire', 'avancé'])
+    .isIn([
+      'débutant',
+      'intermédiaire',
+      'avancé',
+      'Débutant',
+      'Intermédiaire',
+      'Avancé',
+    ])
     .withMessage(
       'Le niveau de difficulté doit être débutant, intermédiaire, ou avancé'
     ),

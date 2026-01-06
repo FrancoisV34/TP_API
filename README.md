@@ -52,6 +52,10 @@ Le serveur démarre sur le port 3000 par défaut.
 
 Accédez à la documentation interactive sur : `http://localhost:3000/api-docs`
 
+Accédez directement à tous les cours qui sont publiés (published: true): `http://localhost:3000/courses`
+
+Accédez directement à toutes les catégories ici : `http://localhost:3000/categories`
+
 ### Routes disponibles
 
 #### Cours (Courses)
@@ -59,7 +63,7 @@ Accédez à la documentation interactive sur : `http://localhost:3000/api-docs`
 - `GET /courses` - Récupérer tous les cours publiés
 - `GET /courses/:id` - Récupérer un cours par son ID
 - `GET /courses/level/:level` - Récupérer les cours par niveau (débutant, intermédiaire, avancé)
-- `POST /courses` - Créer un cours (authentification requise)
+- `POST /courses` - Créer un cours (authentification requise) (Vous devez d'abord avoir créé une "categories" pour lier avec le categoryId)
 - `PUT /courses/:id` - Modifier un cours (authentification requise)
 - `DELETE /courses/:id` - Supprimer un cours (authentification requise, admin uniquement)
 
