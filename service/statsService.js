@@ -7,7 +7,6 @@ const { User } = require('../model/User');
 const getCoursesStats = async () => {
   try {
     const stats = await Course.findAll({
-      where: { published: true },
       attributes: [
         'categoryId',
         [sequelize.fn('COUNT', sequelize.col('id')), 'courseCount'],
