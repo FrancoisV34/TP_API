@@ -48,6 +48,32 @@ Cette API permet de gérer une plateforme de cours en ligne. Elle fournit des fo
 
 Le serveur démarre sur le port 3000 par défaut.
 
+Pour se connecter en tant que ADMIN (
+{
+"email": "admin@admin.com",
+"username": "admin",
+"password": "admin123",
+"role": "admin"
+}
+) utilisez email en tant qu'identifiant et password comme mot de passe
+
+Pour se connecter en tant que USER (
+{
+"email": "user@user.com",
+"username": "user",
+"password": "user1234"
+}
+) utilisez email en tant qu'identifiant et password comme mot de passe
+
+Pour se connecter en tant que INSTRUCTOR (
+{
+"email": "instructor@instructor.com",
+"username": "instructor",
+"password": "instructor1234",
+"role": "instructor"
+}
+) utilisez email en tant qu'identifiant et password comme mot de passe
+
 ### Documentation Swagger
 
 Accédez à la documentation interactive sur : `http://localhost:3000/api-docs`
