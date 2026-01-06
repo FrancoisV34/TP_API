@@ -5,6 +5,7 @@ const associations = require('./config/associations');
 const { swaggerUi, specs } = require('./config/swagger');
 const courseRouter = require('./router/courseRouter');
 const categoryRouter = require('./router/categoryRouter');
+const authRouter =  require('./router/authRouter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,9 +20,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Routes
 app.use('/courses', courseRouter);
 app.use('/categories', categoryRouter);
-
-// Auth routes will be added by colleague
-// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
