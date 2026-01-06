@@ -11,9 +11,6 @@
  *         - price
  *         - instructor
  *       properties:
- *         id:
- *           type: integer
- *           description: ID auto-généré du cours
  *         title:
  *           type: string
  *           description: Titre du cours

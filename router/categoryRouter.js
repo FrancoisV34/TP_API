@@ -8,9 +8,6 @@
  *         - name
  *         - description
  *       properties:
- *         id:
- *           type: integer
- *           description: ID auto-généré de la catégorie
  *         name:
  *           type: string
  *           description: Nom de la catégorie
