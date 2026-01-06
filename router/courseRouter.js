@@ -47,9 +47,6 @@
  *           format: date-time
  */
 
-//quand auth sera mis en place, ajouter le middleware d'authentification aux routes protégées
-// Ajouter roles pour bonus (instructor / admin)
-//un peu dans ce genre : router.delete('/:id', authMiddleware, roleMiddleware('admin'), deleteCourseValidation, deleteCourseHandler);
 
 const express = require('express');
 const router = express.Router();
@@ -68,6 +65,8 @@ const {
   getCoursesByLevelValidation,
   deleteCourseValidation,
 } = require('../validators/courseValidator');
+const { authRequired, requireRole, requireAnyRole } = require("../middleware/auth")
+const { USER_ROLES } = require("../model/User");
 
 // Routes publiques
 /**
@@ -144,11 +143,7 @@ router.get(
   getCoursesByLevelHandler
 );
 
-//⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ Chose que je ne savais pas ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-// Middleware d'authentification appliqué à partir d'ici
-//router.use(authMiddleware);  ⚠️ À partir de cette ligne, TOUTES les routes nécessitent une auth
-
-// Routes protégées (auth middleware will be added by colleague)
+// Routes protégées
 
 /**
  * @swagger
@@ -180,8 +175,10 @@ router.get(
  *       500:
  *         description: Erreur serveur
  */
-router.post('/', createCourseValidation, createCourseHandler);
-router.put('/:id', updateCourseValidation, updateCourseHandler);
-router.delete('/:id', deleteCourseValidation, deleteCourseHandler);
+router.post('/', authRequired, requireAnyRole(USER_ROLES.ADMIN, USER_ROLES.INSTRUCTOR), createCourseValidation, createCourseHandler);
+
+router.put('/:id', authRequired, requireAnyRole(USER_ROLES.ADMIN, USER_ROLES.INSTRUCTOR), updateCourseValidation, updateCourseHandler);
+
+router.delete('/:id', authRequired, requireRole(USER_ROLES.ADMIN), deleteCourseValidation, deleteCourseHandler);
 
 module.exports = router;
