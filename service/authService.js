@@ -7,7 +7,8 @@ function signToken(user) {
   return jwt.sign(
     { 
       id: user.id, 
-      email: user.email, 
+      // email: user.email, 
+      username: user.username, 
       role: user.role 
     },
     process.env.JWT_SECRET,
@@ -39,7 +40,7 @@ async function register({ email, username, password, role }) {
     email,
     username,
     passwordHash,
-    role: USER_ROLES.USER,
+    role: role || USER_ROLES.USER,
   });
 
   return { 
@@ -53,14 +54,14 @@ async function register({ email, username, password, role }) {
 async function login({ email, password }) {
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    const err = new Error("Invalid credentials");
+    const err = new Error("Combinaison email et mot de passe invalide !");
     err.status = 401;
     throw err;
   }
 
   const ok = await bcrypt.compare(password, user.passwordHash);
   if (!ok) {
-    const err = new Error("Invalid credentials");
+    const err = new Error("Combinaison email et mot de passe invalide !");
     err.status = 401;
     throw err;
   }

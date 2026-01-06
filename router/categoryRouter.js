@@ -22,10 +22,6 @@
  *           format: date-time
  */
 
-//quand auth sera mis en place, ajouter le middleware d'authentification aux routes protégées
-// Ajouter roles pour bonus (instructor / admin)
-//un peu dans ce genre : router.delete('/:id', authMiddleware, roleMiddleware('admin'), deleteCourseValidation, deleteCourseHandler);
-
 const express = require('express');
 const router = express.Router();
 const {
@@ -37,6 +33,8 @@ const {
   createCategoryValidation,
   getCategoryByIdValidation,
 } = require('../validators/categoryValidator');
+const { authRequired, requireRole } = require('../middleware/auth');
+const { USER_ROLES } = require('../model/User');
 
 // Routes publiques
 
@@ -83,13 +81,7 @@ router.get('/', getCategories);
  */
 router.get('/:id', getCategoryByIdValidation, getCategory);
 
-//⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ Chose que je ne savais pas ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-// Middleware d'authentification appliqué à partir d'ici
-//router.use(authMiddleware);  ⚠️ À partir de cette ligne, TOUTES les routes nécessitent une auth
-//meme chose que pour courseRouter.js
-
-// Routes protégées (auth middleware will be added by colleague)
-// Only admin can create categories
+// Routes protégées
 
 /**
  * @swagger
@@ -121,6 +113,12 @@ router.get('/:id', getCategoryByIdValidation, getCategory);
  *       500:
  *         description: Erreur serveur
  */
-router.post('/', createCategoryValidation, createCategoryHandler);
+router.post(
+  '/',
+  authRequired,
+  requireRole(USER_ROLES.ADMIN),
+  createCategoryValidation,
+  createCategoryHandler
+);
 
 module.exports = router;

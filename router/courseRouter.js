@@ -44,10 +44,6 @@
  *           format: date-time
  */
 
-//quand auth sera mis en place, ajouter le middleware d'authentification aux routes protégées
-// Ajouter roles pour bonus (instructor / admin)
-//un peu dans ce genre : router.delete('/:id', authMiddleware, roleMiddleware('admin'), deleteCourseValidation, deleteCourseHandler);
-
 const express = require('express');
 const router = express.Router();
 const {
@@ -67,6 +63,12 @@ const {
   getCoursesByLevelValidation,
   deleteCourseValidation,
 } = require('../validators/courseValidator');
+const {
+  authRequired,
+  requireRole,
+  requireAnyRole,
+} = require('../middleware/auth');
+const { USER_ROLES } = require('../model/User');
 
 // Routes publiques
 /**
@@ -197,11 +199,7 @@ router.get('/search', searchCoursesHandler);
  */
 router.get('/filter', filterCoursesByPriceHandler);
 
-//⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ Chose que je ne savais pas ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-// Middleware d'authentification appliqué à partir d'ici
-//router.use(authMiddleware);  ⚠️ À partir de cette ligne, TOUTES les routes nécessitent une auth
-
-// Routes protégées (auth middleware will be added by colleague)
+// Routes protégées
 
 /**
  * @swagger
@@ -233,8 +231,94 @@ router.get('/filter', filterCoursesByPriceHandler);
  *       500:
  *         description: Erreur serveur
  */
-router.post('/', createCourseValidation, createCourseHandler);
-router.put('/:id', updateCourseValidation, updateCourseHandler);
-router.delete('/:id', deleteCourseValidation, deleteCourseHandler);
+router.post(
+  '/',
+  authRequired,
+  requireAnyRole(USER_ROLES.ADMIN, USER_ROLES.INSTRUCTOR),
+  createCourseValidation,
+  createCourseHandler
+);
+
+/**
+ * @swagger
+ * /courses/{id}:
+ *   put:
+ *     summary: Modifier un cours
+ *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID du cours
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Course'
+ *     responses:
+ *       200:
+ *         description: Cours modifié
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Course'
+ *       400:
+ *         description: Données invalides
+ *       401:
+ *         description: Non authentifié
+ *       403:
+ *         description: Non autorisé - Rôle formateur requis
+ *       404:
+ *         description: Cours non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.put(
+  '/:id',
+  authRequired,
+  requireAnyRole(USER_ROLES.ADMIN, USER_ROLES.INSTRUCTOR),
+  updateCourseValidation,
+  updateCourseHandler
+);
+
+/**
+ * @swagger
+ * /courses/{id}:
+ *   delete:
+ *     summary: Supprimer un cours
+ *     tags: [Courses]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID du cours
+ *     responses:
+ *       200:
+ *         description: Cours supprimé
+ *       401:
+ *         description: Non authentifié
+ *       403:
+ *         description: Non autorisé - Rôle admin requis
+ *       404:
+ *         description: Cours non trouvé
+ *       500:
+ *         description: Erreur serveur
+ */
+router.delete(
+  '/:id',
+  authRequired,
+  requireRole(USER_ROLES.ADMIN),
+  deleteCourseValidation,
+  deleteCourseHandler
+);
 
 module.exports = router;
