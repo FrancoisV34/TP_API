@@ -14,6 +14,12 @@ const User = sequelize.define("User",
         primaryKey: true,
         autoIncrement: true,
     },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: { len: [3, 50] },
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -28,7 +34,17 @@ const User = sequelize.define("User",
         type: DataTypes.ENUM(...Object.values(USER_ROLES)),
         allowNull: false,
         defaultValue: USER_ROLES.USER,
-    }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: DataTypes.NOW,
+    },
 },
 {
     timestamps: true,

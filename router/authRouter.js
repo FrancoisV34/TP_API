@@ -27,12 +27,18 @@ const { validateRegister, validateLogin } = require("../validators/authValidator
  *             type: object
  *             required:
  *               - email
+ *               - username
  *               - password
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
  *                 example: user@email.com
+ *               username:
+ *                 type: string
+ *                 minLength: 3
+ *                 maxLength: 50
+ *                 example: user
  *               password:
  *                 type: string
  *                 minLength: 8
@@ -51,6 +57,9 @@ const { validateRegister, validateLogin } = require("../validators/authValidator
  *                 email:
  *                   type: string
  *                   example: user@email.com
+ *                 username:
+ *                   type: string
+ *                   example: user
  *                 role:
  *                   type: string
  *                   example: user

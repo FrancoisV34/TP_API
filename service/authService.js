@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User, USER_ROLES } = require('../model/User');
+const { Op } = require('sequelize');
 
 function signToken(user) {
   return jwt.sign(
@@ -16,10 +17,16 @@ function signToken(user) {
   );
 }
 
-async function register({ email, password, role }) {
-  const exists = await User.findOne({ where: { email } });
+async function register({ email, username, password, role }) {
+  const exists = await User.findOne({ where: { 
+    [Op.or]: [
+      { email }, 
+      { username } 
+    ]
+  } });
+
   if (exists) {
-    const err = new Error("Email already used");
+    const err = new Error("Email or Username already used");
     err.status = 409;
     throw err;
   }
@@ -30,6 +37,7 @@ async function register({ email, password, role }) {
 
   const user = await User.create({
     email,
+    username,
     passwordHash,
     role: USER_ROLES.USER,
   });
@@ -37,6 +45,7 @@ async function register({ email, password, role }) {
   return { 
     id: user.id, 
     email: user.email, 
+    username: user.username, 
     role: user.role 
   };
 }
